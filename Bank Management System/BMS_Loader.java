@@ -108,7 +108,7 @@ public class BMS_Loader {
 			}
 		}	
 	}
-	public void displayData() throws SQLException, AccNoNotFoundException, WrongpinException {
+	public void displayData() throws Exception {
 		Connection conn=Helper.con();
 		Statement stmt=conn.createStatement();
 		System.out.println("Enter account no. : ");
@@ -189,8 +189,19 @@ public class BMS_Loader {
 		}
 	}
 	public void changePin(long acc_no) throws SQLException {
-		System.out.println("Enter new pin : ");
+		System.out.println("Enter new pin : (must contain 4 digits and can't begin with 0) :");
 		pin=sc.nextInt();
+		while(!Pattern.matches("[1-9]{1}[0-9]{3}",String.valueOf(pin))) {
+			System.out.println("!!Invalid Pin!!"
+					+ "\nTry again : ");
+			pin=sc.nextInt();
+		}
+		System.out.println("Re-enter new pin to confirm : ");
+		int pin2=sc.nextInt();
+		while(pin!=pin2) {
+			System.out.println("!!Pin does not match!!\nTry again : ");
+			pin2=sc.nextInt();
+		}
 		Connection conn=Helper.con();
 		Statement stmt=conn.createStatement();
 		stmt.executeUpdate("update bank set pin="+pin+" where acc_no="+acc_no);
